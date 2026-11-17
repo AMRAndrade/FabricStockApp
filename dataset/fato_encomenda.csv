@@ -1,0 +1,11 @@
+cod_empresa,num_encomenda,cod_cliente,nome_cliente,data_encomenda,data_entrega
+EMP01,ENC-0001,C-001,"Frutaria Exemplo, Lda.",2026-11-01,2026-11-08
+EMP01,ENC-0002,C-002,"Mercado Fictício, S.A.",2026-11-07,2026-11-12
+EMP01,ENC-0003,C-003,"Sumos Teste, Lda.",2026-11-10,2026-11-23
+EMP01,ENC-0004,C-004,"Distribuidora Modelo, S.A.",2026-11-10,2026-11-19
+EMP01,ENC-0005,C-005,"Mercearia Imaginária, Lda.",2026-11-10,2026-11-15
+EMP01,ENC-0006,C-001,"Frutaria Exemplo, Lda.",2026-11-05,2026-11-18
+EMP01,ENC-0007,C-002,"Mercado Fictício, S.A.",2026-11-02,2026-11-12
+EMP01,ENC-0008,C-003,"Sumos Teste, Lda.",2026-11-05,2026-11-15
+EMP01,ENC-0009,C-004,"Distribuidora Modelo, S.A.",2026-11-07,2026-11-19
+EMP01,ENC-0010,C-005,"Mercearia Imaginária, Lda.",2026-11-11,2026-11-20

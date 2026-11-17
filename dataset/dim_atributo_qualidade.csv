@@ -1,0 +1,6 @@
+cod_atributo,nome_atributo,tipo_valor,unidade
+brix,Brix,numero,°Bx
+acidez,Acidez,numero,%
+variedade,Variedade,texto,
+origem,Origem,texto,
+calibre,Calibre,texto,

@@ -1,0 +1,22 @@
+# Dependências e builds
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Estado local e segredos (nunca versionar IDs do tenant, URLs de alojamento ou chaves)
+.env
+.env.*
+*.local
+local.settings.json
+**/rayfin/.env*
+**/rayfin/.deployments.json
+deploymentdata.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor / SO
+.vscode/
+.idea/
+.DS_Store

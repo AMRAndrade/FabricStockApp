@@ -1,0 +1,501 @@
+cod_empresa,cod_artigo,cod_lote,cod_atributo,valor_numero,valor_texto
+EMP01,ART-001,L-CONC,brix,68.0,
+EMP01,ART-001,L-CONC,acidez,1.25,
+EMP01,ART-001,L-CONC,variedade,,Valência
+EMP01,ART-001,L-CONC,origem,,Ribatejo
+EMP01,ART-001,L-CONC,calibre,,2
+EMP01,ART-001,L-ATOM,brix,67.0,
+EMP01,ART-001,L-ATOM,acidez,0.68,
+EMP01,ART-001,L-ATOM,variedade,,Valência
+EMP01,ART-001,L-ATOM,origem,,Oeste
+EMP01,ART-001,L-ATOM,calibre,,4
+EMP01,ART-001,L-ALRT,brix,66.0,
+EMP01,ART-001,L-ALRT,acidez,0.66,
+EMP01,ART-001,L-ALRT,variedade,,Valência
+EMP01,ART-001,L-ALRT,origem,,Trás-os-Montes
+EMP01,ART-001,L-ALRT,calibre,,1
+EMP01,ART-001,L-FORA,brix,64.0,
+EMP01,ART-001,L-FORA,acidez,0.97,
+EMP01,ART-001,L-FORA,variedade,,Valência
+EMP01,ART-001,L-FORA,origem,,Ribatejo
+EMP01,ART-001,L-FORA,calibre,,4
+EMP01,ART-001,L-LIM,brix,65.0,
+EMP01,ART-001,L-LIM,acidez,1.30,
+EMP01,ART-001,L-LIM,variedade,,Valência
+EMP01,ART-001,L-LIM,origem,,Ribatejo
+EMP01,ART-001,L-LIM,calibre,,2
+EMP01,ART-003,L-0001,brix,66.2,
+EMP01,ART-003,L-0001,acidez,0.78,
+EMP01,ART-003,L-0001,variedade,,Lane Late
+EMP01,ART-003,L-0001,origem,,Algarve
+EMP01,ART-003,L-0001,calibre,,3
+EMP01,ART-002,L-0002,brix,67.1,
+EMP01,ART-002,L-0002,acidez,1.44,
+EMP01,ART-002,L-0002,variedade,,Navel
+EMP01,ART-002,L-0002,origem,,Algarve
+EMP01,ART-002,L-0002,calibre,,3
+EMP01,ART-003,L-0003,brix,66.2,
+EMP01,ART-003,L-0003,acidez,0.61,
+EMP01,ART-003,L-0003,variedade,,Lane Late
+EMP01,ART-003,L-0003,origem,,Alentejo
+EMP01,ART-003,L-0003,calibre,,3
+EMP01,ART-003,L-0004,brix,66.1,
+EMP01,ART-003,L-0004,acidez,0.89,
+EMP01,ART-003,L-0004,variedade,,Lane Late
+EMP01,ART-003,L-0004,origem,,Beira Interior
+EMP01,ART-003,L-0004,calibre,,2
+EMP01,ART-001,L-0005,brix,65.7,
+EMP01,ART-001,L-0005,acidez,0.50,
+EMP01,ART-001,L-0005,variedade,,Valência
+EMP01,ART-001,L-0005,origem,,Beira Interior
+EMP01,ART-001,L-0005,calibre,,2
+EMP01,ART-001,L-0006,brix,68.8,
+EMP01,ART-001,L-0006,acidez,1.12,
+EMP01,ART-001,L-0006,variedade,,Valência
+EMP01,ART-001,L-0006,origem,,Trás-os-Montes
+EMP01,ART-001,L-0006,calibre,,1
+EMP01,ART-003,L-0007,brix,66.8,
+EMP01,ART-003,L-0007,acidez,0.83,
+EMP01,ART-003,L-0007,variedade,,Lane Late
+EMP01,ART-003,L-0007,origem,,Trás-os-Montes
+EMP01,ART-003,L-0007,calibre,,3
+EMP01,ART-003,L-0008,brix,69.0,
+EMP01,ART-003,L-0008,acidez,1.16,
+EMP01,ART-003,L-0008,variedade,,Lane Late
+EMP01,ART-003,L-0008,origem,,Alentejo
+EMP01,ART-003,L-0008,calibre,,2
+EMP01,ART-002,L-0009,brix,69.3,
+EMP01,ART-002,L-0009,acidez,1.05,
+EMP01,ART-002,L-0009,variedade,,Navel
+EMP01,ART-002,L-0009,origem,,Algarve
+EMP01,ART-002,L-0009,calibre,,3
+EMP01,ART-001,L-0010,brix,70.0,
+EMP01,ART-001,L-0010,acidez,0.96,
+EMP01,ART-001,L-0010,variedade,,Valência
+EMP01,ART-001,L-0010,origem,,Alentejo
+EMP01,ART-001,L-0010,calibre,,2
+EMP01,ART-002,L-0011,brix,67.3,
+EMP01,ART-002,L-0011,acidez,1.16,
+EMP01,ART-002,L-0011,variedade,,Navel
+EMP01,ART-002,L-0011,origem,,Oeste
+EMP01,ART-002,L-0011,calibre,,5
+EMP01,ART-001,L-0012,brix,64.5,
+EMP01,ART-001,L-0012,acidez,1.32,
+EMP01,ART-001,L-0012,variedade,,Valência
+EMP01,ART-001,L-0012,origem,,Ribatejo
+EMP01,ART-001,L-0012,calibre,,3
+EMP01,ART-001,L-0013,brix,55.9,
+EMP01,ART-001,L-0013,acidez,0.55,
+EMP01,ART-001,L-0013,variedade,,Valência
+EMP01,ART-001,L-0013,origem,,Alentejo
+EMP01,ART-001,L-0013,calibre,,5
+EMP01,ART-002,L-0014,brix,63.4,
+EMP01,ART-002,L-0014,acidez,1.22,
+EMP01,ART-002,L-0014,variedade,,Navel
+EMP01,ART-002,L-0014,origem,,Alentejo
+EMP01,ART-002,L-0014,calibre,,4
+EMP01,ART-002,L-0015,brix,63.0,
+EMP01,ART-002,L-0015,acidez,1.39,
+EMP01,ART-002,L-0015,variedade,,Navel
+EMP01,ART-002,L-0015,origem,,Algarve
+EMP01,ART-002,L-0015,calibre,,4
+EMP01,ART-002,L-0016,brix,60.3,
+EMP01,ART-002,L-0016,acidez,0.55,
+EMP01,ART-002,L-0016,variedade,,Navel
+EMP01,ART-002,L-0016,origem,,Ribatejo
+EMP01,ART-002,L-0016,calibre,,1
+EMP01,ART-001,L-0017,brix,60.5,
+EMP01,ART-001,L-0017,acidez,1.17,
+EMP01,ART-001,L-0017,variedade,,Valência
+EMP01,ART-001,L-0017,origem,,Beira Interior
+EMP01,ART-001,L-0017,calibre,,5
+EMP01,ART-003,L-0018,brix,63.8,
+EMP01,ART-003,L-0018,acidez,1.33,
+EMP01,ART-003,L-0018,variedade,,Lane Late
+EMP01,ART-003,L-0018,origem,,Beira Interior
+EMP01,ART-003,L-0018,calibre,,4
+EMP01,ART-003,L-0019,brix,56.9,
+EMP01,ART-003,L-0019,acidez,1.25,
+EMP01,ART-003,L-0019,variedade,,Lane Late
+EMP01,ART-003,L-0019,origem,,Trás-os-Montes
+EMP01,ART-003,L-0019,calibre,,3
+EMP01,ART-001,L-0020,brix,61.5,
+EMP01,ART-001,L-0020,acidez,0.77,
+EMP01,ART-001,L-0020,variedade,,Valência
+EMP01,ART-001,L-0020,origem,,Algarve
+EMP01,ART-001,L-0020,calibre,,3
+EMP01,ART-004,L-0021,brix,12.6,
+EMP01,ART-004,L-0021,acidez,1.39,
+EMP01,ART-004,L-0021,variedade,,Eureka
+EMP01,ART-004,L-0021,origem,,Algarve
+EMP01,ART-004,L-0021,calibre,,2
+EMP01,ART-005,L-0022,brix,12.4,
+EMP01,ART-005,L-0022,acidez,1.21,
+EMP01,ART-005,L-0022,variedade,,Verna
+EMP01,ART-005,L-0022,origem,,Algarve
+EMP01,ART-005,L-0022,calibre,,4
+EMP01,ART-006,L-0023,brix,15.8,
+EMP01,ART-006,L-0023,acidez,0.92,
+EMP01,ART-006,L-0023,variedade,,Clementina
+EMP01,ART-006,L-0023,origem,,Ribatejo
+EMP01,ART-006,L-0023,calibre,,4
+EMP01,ART-007,L-0024,brix,10.9,
+EMP01,ART-007,L-0024,acidez,1.36,
+EMP01,ART-007,L-0024,variedade,,Ortanique
+EMP01,ART-007,L-0024,origem,,Beira Interior
+EMP01,ART-007,L-0024,calibre,,4
+EMP01,ART-008,L-0025,brix,16.3,
+EMP01,ART-008,L-0025,acidez,0.80,
+EMP01,ART-008,L-0025,variedade,,Star Ruby
+EMP01,ART-008,L-0025,origem,,Alentejo
+EMP01,ART-008,L-0025,calibre,,4
+EMP01,ART-009,L-0026,brix,10.7,
+EMP01,ART-009,L-0026,acidez,0.99,
+EMP01,ART-009,L-0026,variedade,,Gala
+EMP01,ART-009,L-0026,origem,,Oeste
+EMP01,ART-009,L-0026,calibre,,4
+EMP01,ART-010,L-0027,brix,8.8,
+EMP01,ART-010,L-0027,acidez,1.17,
+EMP01,ART-010,L-0027,variedade,,Fuji
+EMP01,ART-010,L-0027,origem,,Alentejo
+EMP01,ART-010,L-0027,calibre,,2
+EMP01,ART-011,L-0028,brix,11.8,
+EMP01,ART-011,L-0028,acidez,1.41,
+EMP01,ART-011,L-0028,variedade,,Reineta
+EMP01,ART-011,L-0028,origem,,Beira Interior
+EMP01,ART-011,L-0028,calibre,,5
+EMP01,ART-012,L-0029,brix,13.5,
+EMP01,ART-012,L-0029,acidez,0.64,
+EMP01,ART-012,L-0029,variedade,,Rocha
+EMP01,ART-012,L-0029,origem,,Alentejo
+EMP01,ART-012,L-0029,calibre,,2
+EMP01,ART-013,L-0030,brix,14.5,
+EMP01,ART-013,L-0030,acidez,0.71,
+EMP01,ART-013,L-0030,variedade,,Conference
+EMP01,ART-013,L-0030,origem,,Oeste
+EMP01,ART-013,L-0030,calibre,,3
+EMP01,ART-014,L-0031,brix,12.8,
+EMP01,ART-014,L-0031,acidez,0.75,
+EMP01,ART-014,L-0031,variedade,,Amarelo
+EMP01,ART-014,L-0031,origem,,Algarve
+EMP01,ART-014,L-0031,calibre,,4
+EMP01,ART-015,L-0032,brix,13.9,
+EMP01,ART-015,L-0032,acidez,0.72,
+EMP01,ART-015,L-0032,variedade,,Rainha Cláudia
+EMP01,ART-015,L-0032,origem,,Algarve
+EMP01,ART-015,L-0032,calibre,,1
+EMP01,ART-016,L-0033,brix,15.5,
+EMP01,ART-016,L-0033,acidez,1.12,
+EMP01,ART-016,L-0033,variedade,,Hayward
+EMP01,ART-016,L-0033,origem,,Ribatejo
+EMP01,ART-016,L-0033,calibre,,2
+EMP01,ART-017,L-0034,brix,12.6,
+EMP01,ART-017,L-0034,acidez,0.97,
+EMP01,ART-017,L-0034,variedade,,Branca Itália
+EMP01,ART-017,L-0034,origem,,Oeste
+EMP01,ART-017,L-0034,calibre,,3
+EMP01,ART-018,L-0035,brix,19.7,
+EMP01,ART-018,L-0035,acidez,1.28,
+EMP01,ART-018,L-0035,variedade,,Tinta Red Globe
+EMP01,ART-018,L-0035,origem,,Ribatejo
+EMP01,ART-018,L-0035,calibre,,3
+EMP01,ART-019,L-0036,brix,16.6,
+EMP01,ART-019,L-0036,acidez,1.08,
+EMP01,ART-019,L-0036,variedade,,Branco
+EMP01,ART-019,L-0036,origem,,Alentejo
+EMP01,ART-019,L-0036,calibre,,4
+EMP01,ART-020,L-0037,brix,17.2,
+EMP01,ART-020,L-0037,acidez,0.60,
+EMP01,ART-020,L-0037,variedade,,Sem Grainha
+EMP01,ART-020,L-0037,origem,,Oeste
+EMP01,ART-020,L-0037,calibre,,5
+EMP01,ART-004,L-0038,brix,13.4,
+EMP01,ART-004,L-0038,acidez,0.85,
+EMP01,ART-004,L-0038,variedade,,Eureka
+EMP01,ART-004,L-0038,origem,,Alentejo
+EMP01,ART-004,L-0038,calibre,,3
+EMP01,ART-005,L-0039,brix,19.7,
+EMP01,ART-005,L-0039,acidez,0.51,
+EMP01,ART-005,L-0039,variedade,,Verna
+EMP01,ART-005,L-0039,origem,,Alentejo
+EMP01,ART-005,L-0039,calibre,,4
+EMP01,ART-006,L-0040,brix,18.4,
+EMP01,ART-006,L-0040,acidez,1.21,
+EMP01,ART-006,L-0040,variedade,,Clementina
+EMP01,ART-006,L-0040,origem,,Alentejo
+EMP01,ART-006,L-0040,calibre,,2
+EMP01,ART-007,L-0041,brix,10.4,
+EMP01,ART-007,L-0041,acidez,0.96,
+EMP01,ART-007,L-0041,variedade,,Ortanique
+EMP01,ART-007,L-0041,origem,,Trás-os-Montes
+EMP01,ART-007,L-0041,calibre,,5
+EMP01,ART-008,L-0042,brix,19.0,
+EMP01,ART-008,L-0042,acidez,1.33,
+EMP01,ART-008,L-0042,variedade,,Star Ruby
+EMP01,ART-008,L-0042,origem,,Algarve
+EMP01,ART-008,L-0042,calibre,,3
+EMP01,ART-009,L-0043,brix,19.1,
+EMP01,ART-009,L-0043,acidez,1.07,
+EMP01,ART-009,L-0043,variedade,,Gala
+EMP01,ART-009,L-0043,origem,,Trás-os-Montes
+EMP01,ART-009,L-0043,calibre,,4
+EMP01,ART-010,L-0044,brix,10.9,
+EMP01,ART-010,L-0044,acidez,0.68,
+EMP01,ART-010,L-0044,variedade,,Fuji
+EMP01,ART-010,L-0044,origem,,Ribatejo
+EMP01,ART-010,L-0044,calibre,,3
+EMP01,ART-011,L-0045,brix,9.0,
+EMP01,ART-011,L-0045,acidez,1.06,
+EMP01,ART-011,L-0045,variedade,,Reineta
+EMP01,ART-011,L-0045,origem,,Beira Interior
+EMP01,ART-011,L-0045,calibre,,2
+EMP01,ART-012,L-0046,brix,17.1,
+EMP01,ART-012,L-0046,acidez,0.99,
+EMP01,ART-012,L-0046,variedade,,Rocha
+EMP01,ART-012,L-0046,origem,,Ribatejo
+EMP01,ART-012,L-0046,calibre,,4
+EMP01,ART-013,L-0047,brix,19.4,
+EMP01,ART-013,L-0047,acidez,0.59,
+EMP01,ART-013,L-0047,variedade,,Conference
+EMP01,ART-013,L-0047,origem,,Ribatejo
+EMP01,ART-013,L-0047,calibre,,4
+EMP01,ART-014,L-0048,brix,13.1,
+EMP01,ART-014,L-0048,acidez,0.97,
+EMP01,ART-014,L-0048,variedade,,Amarelo
+EMP01,ART-014,L-0048,origem,,Beira Interior
+EMP01,ART-014,L-0048,calibre,,3
+EMP01,ART-015,L-0049,brix,16.3,
+EMP01,ART-015,L-0049,acidez,1.20,
+EMP01,ART-015,L-0049,variedade,,Rainha Cláudia
+EMP01,ART-015,L-0049,origem,,Oeste
+EMP01,ART-015,L-0049,calibre,,3
+EMP01,ART-016,L-0050,brix,15.8,
+EMP01,ART-016,L-0050,acidez,0.82,
+EMP01,ART-016,L-0050,variedade,,Hayward
+EMP01,ART-016,L-0050,origem,,Trás-os-Montes
+EMP01,ART-016,L-0050,calibre,,5
+EMP01,ART-017,L-0051,brix,11.0,
+EMP01,ART-017,L-0051,acidez,1.24,
+EMP01,ART-017,L-0051,variedade,,Branca Itália
+EMP01,ART-017,L-0051,origem,,Oeste
+EMP01,ART-017,L-0051,calibre,,5
+EMP01,ART-018,L-0052,brix,14.6,
+EMP01,ART-018,L-0052,acidez,1.33,
+EMP01,ART-018,L-0052,variedade,,Tinta Red Globe
+EMP01,ART-018,L-0052,origem,,Oeste
+EMP01,ART-018,L-0052,calibre,,2
+EMP01,ART-019,L-0053,brix,16.5,
+EMP01,ART-019,L-0053,acidez,1.21,
+EMP01,ART-019,L-0053,variedade,,Branco
+EMP01,ART-019,L-0053,origem,,Ribatejo
+EMP01,ART-019,L-0053,calibre,,3
+EMP01,ART-020,L-0054,brix,8.4,
+EMP01,ART-020,L-0054,acidez,1.20,
+EMP01,ART-020,L-0054,variedade,,Sem Grainha
+EMP01,ART-020,L-0054,origem,,Ribatejo
+EMP01,ART-020,L-0054,calibre,,4
+EMP01,ART-004,L-0055,brix,16.0,
+EMP01,ART-004,L-0055,acidez,0.97,
+EMP01,ART-004,L-0055,variedade,,Eureka
+EMP01,ART-004,L-0055,origem,,Alentejo
+EMP01,ART-004,L-0055,calibre,,3
+EMP01,ART-005,L-0056,brix,14.9,
+EMP01,ART-005,L-0056,acidez,0.61,
+EMP01,ART-005,L-0056,variedade,,Verna
+EMP01,ART-005,L-0056,origem,,Algarve
+EMP01,ART-005,L-0056,calibre,,4
+EMP01,ART-006,L-0057,brix,10.3,
+EMP01,ART-006,L-0057,acidez,0.65,
+EMP01,ART-006,L-0057,variedade,,Clementina
+EMP01,ART-006,L-0057,origem,,Beira Interior
+EMP01,ART-006,L-0057,calibre,,3
+EMP01,ART-007,L-0058,brix,12.9,
+EMP01,ART-007,L-0058,acidez,1.11,
+EMP01,ART-007,L-0058,variedade,,Ortanique
+EMP01,ART-007,L-0058,origem,,Beira Interior
+EMP01,ART-007,L-0058,calibre,,2
+EMP01,ART-008,L-0059,brix,15.8,
+EMP01,ART-008,L-0059,acidez,0.80,
+EMP01,ART-008,L-0059,variedade,,Star Ruby
+EMP01,ART-008,L-0059,origem,,Beira Interior
+EMP01,ART-008,L-0059,calibre,,4
+EMP01,ART-009,L-0060,brix,16.7,
+EMP01,ART-009,L-0060,acidez,1.11,
+EMP01,ART-009,L-0060,variedade,,Gala
+EMP01,ART-009,L-0060,origem,,Trás-os-Montes
+EMP01,ART-009,L-0060,calibre,,1
+EMP01,ART-010,L-0061,brix,10.3,
+EMP01,ART-010,L-0061,acidez,0.66,
+EMP01,ART-010,L-0061,variedade,,Fuji
+EMP01,ART-010,L-0061,origem,,Ribatejo
+EMP01,ART-010,L-0061,calibre,,5
+EMP01,ART-011,L-0062,brix,13.6,
+EMP01,ART-011,L-0062,acidez,0.95,
+EMP01,ART-011,L-0062,variedade,,Reineta
+EMP01,ART-011,L-0062,origem,,Beira Interior
+EMP01,ART-011,L-0062,calibre,,4
+EMP01,ART-012,L-0063,brix,17.7,
+EMP01,ART-012,L-0063,acidez,1.21,
+EMP01,ART-012,L-0063,variedade,,Rocha
+EMP01,ART-012,L-0063,origem,,Trás-os-Montes
+EMP01,ART-012,L-0063,calibre,,4
+EMP01,ART-013,L-0064,brix,15.8,
+EMP01,ART-013,L-0064,acidez,1.29,
+EMP01,ART-013,L-0064,variedade,,Conference
+EMP01,ART-013,L-0064,origem,,Trás-os-Montes
+EMP01,ART-013,L-0064,calibre,,5
+EMP01,ART-014,L-0065,brix,9.1,
+EMP01,ART-014,L-0065,acidez,1.04,
+EMP01,ART-014,L-0065,variedade,,Amarelo
+EMP01,ART-014,L-0065,origem,,Trás-os-Montes
+EMP01,ART-014,L-0065,calibre,,2
+EMP01,ART-015,L-0066,brix,13.8,
+EMP01,ART-015,L-0066,acidez,0.67,
+EMP01,ART-015,L-0066,variedade,,Rainha Cláudia
+EMP01,ART-015,L-0066,origem,,Oeste
+EMP01,ART-015,L-0066,calibre,,5
+EMP01,ART-016,L-0067,brix,10.0,
+EMP01,ART-016,L-0067,acidez,0.97,
+EMP01,ART-016,L-0067,variedade,,Hayward
+EMP01,ART-016,L-0067,origem,,Oeste
+EMP01,ART-016,L-0067,calibre,,4
+EMP01,ART-017,L-0068,brix,11.4,
+EMP01,ART-017,L-0068,acidez,0.94,
+EMP01,ART-017,L-0068,variedade,,Branca Itália
+EMP01,ART-017,L-0068,origem,,Beira Interior
+EMP01,ART-017,L-0068,calibre,,1
+EMP01,ART-018,L-0069,brix,15.9,
+EMP01,ART-018,L-0069,acidez,0.53,
+EMP01,ART-018,L-0069,variedade,,Tinta Red Globe
+EMP01,ART-018,L-0069,origem,,Ribatejo
+EMP01,ART-018,L-0069,calibre,,5
+EMP01,ART-019,L-0070,brix,19.6,
+EMP01,ART-019,L-0070,acidez,1.08,
+EMP01,ART-019,L-0070,variedade,,Branco
+EMP01,ART-019,L-0070,origem,,Ribatejo
+EMP01,ART-019,L-0070,calibre,,4
+EMP01,ART-020,L-0071,brix,11.8,
+EMP01,ART-020,L-0071,acidez,0.68,
+EMP01,ART-020,L-0071,variedade,,Sem Grainha
+EMP01,ART-020,L-0071,origem,,Beira Interior
+EMP01,ART-020,L-0071,calibre,,4
+EMP01,ART-004,L-0072,brix,9.9,
+EMP01,ART-004,L-0072,acidez,0.85,
+EMP01,ART-004,L-0072,variedade,,Eureka
+EMP01,ART-004,L-0072,origem,,Oeste
+EMP01,ART-004,L-0072,calibre,,3
+EMP01,ART-005,L-0073,brix,10.2,
+EMP01,ART-005,L-0073,acidez,0.83,
+EMP01,ART-005,L-0073,variedade,,Verna
+EMP01,ART-005,L-0073,origem,,Trás-os-Montes
+EMP01,ART-005,L-0073,calibre,,4
+EMP01,ART-006,L-0074,brix,12.8,
+EMP01,ART-006,L-0074,acidez,0.95,
+EMP01,ART-006,L-0074,variedade,,Clementina
+EMP01,ART-006,L-0074,origem,,Oeste
+EMP01,ART-006,L-0074,calibre,,3
+EMP01,ART-007,L-0075,brix,15.1,
+EMP01,ART-007,L-0075,acidez,1.36,
+EMP01,ART-007,L-0075,variedade,,Ortanique
+EMP01,ART-007,L-0075,origem,,Algarve
+EMP01,ART-007,L-0075,calibre,,5
+EMP01,ART-008,L-0076,brix,14.8,
+EMP01,ART-008,L-0076,acidez,1.02,
+EMP01,ART-008,L-0076,variedade,,Star Ruby
+EMP01,ART-008,L-0076,origem,,Beira Interior
+EMP01,ART-008,L-0076,calibre,,4
+EMP01,ART-009,L-0077,brix,16.6,
+EMP01,ART-009,L-0077,acidez,0.70,
+EMP01,ART-009,L-0077,variedade,,Gala
+EMP01,ART-009,L-0077,origem,,Beira Interior
+EMP01,ART-009,L-0077,calibre,,2
+EMP01,ART-010,L-0078,brix,15.7,
+EMP01,ART-010,L-0078,acidez,0.62,
+EMP01,ART-010,L-0078,variedade,,Fuji
+EMP01,ART-010,L-0078,origem,,Trás-os-Montes
+EMP01,ART-010,L-0078,calibre,,5
+EMP01,ART-011,L-0079,brix,8.1,
+EMP01,ART-011,L-0079,acidez,1.05,
+EMP01,ART-011,L-0079,variedade,,Reineta
+EMP01,ART-011,L-0079,origem,,Algarve
+EMP01,ART-011,L-0079,calibre,,2
+EMP01,ART-012,L-0080,brix,8.9,
+EMP01,ART-012,L-0080,acidez,1.15,
+EMP01,ART-012,L-0080,variedade,,Rocha
+EMP01,ART-012,L-0080,origem,,Ribatejo
+EMP01,ART-012,L-0080,calibre,,4
+EMP01,ART-013,L-0081,brix,18.6,
+EMP01,ART-013,L-0081,acidez,0.92,
+EMP01,ART-013,L-0081,variedade,,Conference
+EMP01,ART-013,L-0081,origem,,Alentejo
+EMP01,ART-013,L-0081,calibre,,4
+EMP01,ART-014,L-0082,brix,13.3,
+EMP01,ART-014,L-0082,acidez,0.88,
+EMP01,ART-014,L-0082,variedade,,Amarelo
+EMP01,ART-014,L-0082,origem,,Beira Interior
+EMP01,ART-014,L-0082,calibre,,5
+EMP01,ART-015,L-0083,brix,14.3,
+EMP01,ART-015,L-0083,acidez,0.84,
+EMP01,ART-015,L-0083,variedade,,Rainha Cláudia
+EMP01,ART-015,L-0083,origem,,Beira Interior
+EMP01,ART-015,L-0083,calibre,,3
+EMP01,ART-016,L-0084,brix,9.2,
+EMP01,ART-016,L-0084,acidez,1.34,
+EMP01,ART-016,L-0084,variedade,,Hayward
+EMP01,ART-016,L-0084,origem,,Beira Interior
+EMP01,ART-016,L-0084,calibre,,4
+EMP01,ART-017,L-0085,brix,16.9,
+EMP01,ART-017,L-0085,acidez,0.85,
+EMP01,ART-017,L-0085,variedade,,Branca Itália
+EMP01,ART-017,L-0085,origem,,Beira Interior
+EMP01,ART-017,L-0085,calibre,,5
+EMP01,ART-018,L-0086,brix,16.6,
+EMP01,ART-018,L-0086,acidez,1.37,
+EMP01,ART-018,L-0086,variedade,,Tinta Red Globe
+EMP01,ART-018,L-0086,origem,,Trás-os-Montes
+EMP01,ART-018,L-0086,calibre,,2
+EMP01,ART-019,L-0087,brix,14.1,
+EMP01,ART-019,L-0087,acidez,0.54,
+EMP01,ART-019,L-0087,variedade,,Branco
+EMP01,ART-019,L-0087,origem,,Trás-os-Montes
+EMP01,ART-019,L-0087,calibre,,4
+EMP01,ART-020,L-0088,brix,9.1,
+EMP01,ART-020,L-0088,acidez,1.00,
+EMP01,ART-020,L-0088,variedade,,Sem Grainha
+EMP01,ART-020,L-0088,origem,,Algarve
+EMP01,ART-020,L-0088,calibre,,2
+EMP01,ART-004,L-0089,brix,12.0,
+EMP01,ART-004,L-0089,acidez,1.37,
+EMP01,ART-004,L-0089,variedade,,Eureka
+EMP01,ART-004,L-0089,origem,,Alentejo
+EMP01,ART-004,L-0089,calibre,,1
+EMP01,ART-005,L-0090,brix,16.9,
+EMP01,ART-005,L-0090,acidez,0.91,
+EMP01,ART-005,L-0090,variedade,,Verna
+EMP01,ART-005,L-0090,origem,,Trás-os-Montes
+EMP01,ART-005,L-0090,calibre,,2
+EMP01,ART-006,L-0091,brix,9.3,
+EMP01,ART-006,L-0091,acidez,0.84,
+EMP01,ART-006,L-0091,variedade,,Clementina
+EMP01,ART-006,L-0091,origem,,Trás-os-Montes
+EMP01,ART-006,L-0091,calibre,,4
+EMP01,ART-007,L-0092,brix,14.5,
+EMP01,ART-007,L-0092,acidez,1.35,
+EMP01,ART-007,L-0092,variedade,,Ortanique
+EMP01,ART-007,L-0092,origem,,Beira Interior
+EMP01,ART-007,L-0092,calibre,,4
+EMP01,ART-008,L-0093,brix,13.2,
+EMP01,ART-008,L-0093,acidez,1.12,
+EMP01,ART-008,L-0093,variedade,,Star Ruby
+EMP01,ART-008,L-0093,origem,,Ribatejo
+EMP01,ART-008,L-0093,calibre,,3
+EMP01,ART-009,L-0094,brix,18.8,
+EMP01,ART-009,L-0094,acidez,1.26,
+EMP01,ART-009,L-0094,variedade,,Gala
+EMP01,ART-009,L-0094,origem,,Trás-os-Montes
+EMP01,ART-009,L-0094,calibre,,1
+EMP01,ART-010,L-0095,brix,12.2,
+EMP01,ART-010,L-0095,acidez,1.40,
+EMP01,ART-010,L-0095,variedade,,Fuji
+EMP01,ART-010,L-0095,origem,,Algarve
+EMP01,ART-010,L-0095,calibre,,3
