@@ -89,7 +89,8 @@ O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que
 ### Pendente para fechar a Fase 0
 - [x] `npx rayfin login`.
 - [x] Deploy *hello-world* para o workspace `fabric-app-reserva-lotes`.
-- [ ] Acesso por SSO ao URL da app, confirmado pelo utilizador no browser (dentro e fora do portal do Fabric).
+- [x] Acesso por SSO dentro do portal do Fabric: o utilizador confirmou que a app abre (ecrã de boas-vindas do template, sem conteúdo próprio). No workspace aparecem 3 itens: a Fabric App, a SQL database da app e o respetivo endpoint de análise SQL.
+- [ ] Acesso fora do portal (URL de alojamento direto) — por confirmar.
 - [ ] Consumo de capacidade (Fabric Capacity Metrics, se o utilizador tiver acesso).
 
 ---
