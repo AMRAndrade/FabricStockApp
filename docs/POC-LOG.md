@@ -74,11 +74,23 @@ O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que
 - `npx rayfin up --workspace "fabric-app-reserva-lotes" --dry-run` → **falha**: `Workspace "fabric-app-reserva-lotes" not found`. A resolução do nome por API devolveu 200, mas o nome não consta da lista visível para a conta com sessão iniciada.
 - `npx rayfin connector search --all-workspaces --type fabric-sqlanalytics` → só mostra Lakehouses de outro workspace; `lh_reserva_lotes` não aparece.
 - Hipótese: a conta ou o tenant da sessão do CLI não é o do workspace da PoC, ou o workspace tem outro nome. Deploy **não** feito; aguardar o utilizador.
+- Repetido com o ID do workspace indicado pelo utilizador (`--workspace-id`, `--dry-run`) → **falha**: `Fabric API error: 404 Not Found — The provided workspace was not found`. O workspace existe (o utilizador abriu-o no portal), logo a sessão do CLI está noutra conta/tenant ou sem acesso ao workspace.
+
+### 2026-11-17 · Deploy *hello-world*
+- O utilizador indicou o URL correto do workspace (o primeiro ID era de outro workspace). Com a mesma sessão, `npx rayfin up --workspace-id <id> --dry-run` resolveu o workspace `fabric-app-reserva-lotes` → **funciona**. O dry-run lista: verificar capacidade, criar/reutilizar o item AppBackend, aplicar runtime settings (auth, data), gerar a configuração DAB (Data API Builder), publicar o conteúdo estático.
+- `npx rayfin up --workspace-id <id>` (autorizado pelo utilizador) → **funciona** em 75 s. Componentes: runtime, data e staticHosting `success`; storage, connectors e functions `disabled`. Sem pedido de capacidade nem trial (o workspace já tinha capacidade).
+- **Região:** West Europe (endpoint `westeurope.pbidedicated.windows.net`, alojamento `*-westeurope.webapp.fabricapps.net`).
+- Itens criados no workspace: Fabric App (AppBackend) `app-reserva-lotes` + SQL database `app-reserva-lotes` (filho).
+- `npx rayfin up status` → management endpoint `Reachable`; serviços auth e data `enabled`.
+- Pedido HTTP sem sessão ao URL da app → `HTTP 401`: os ficheiros estáticos estão protegidos (`assetAccess: protected`) → **funciona**.
+- O `rayfin up` acrescenta o URL de alojamento a `services.auth.allowedRedirectUris` no `rayfin.yml` em **cada** deploy (documentado em `rayfin-guide/hosting/index.md`). Para não versionar URLs de alojamento, a linha é retirada antes de cada commit (o deploy volta a registá-la no backend). Também acrescentou `127.0.0.1:5173` e `storage`/`functions: enabled: false` (sem dados sensíveis, versionado).
+- O `rayfin/.env` e o `rayfin/.deployments.json` (IDs, chave publicável) ficam fora do git pelo `.gitignore`.
 
 ### Pendente para fechar a Fase 0
-- [x] `npx rayfin login` (sessão ativa, mas ver acima).
-- [ ] Deploy *hello-world* para o workspace `fabric-app-reserva-lotes` (`npx rayfin up --workspace "fabric-app-reserva-lotes"`), com autorização explícita.
-- [ ] Acesso por SSO ao URL da app; região e consumo de capacidade.
+- [x] `npx rayfin login`.
+- [x] Deploy *hello-world* para o workspace `fabric-app-reserva-lotes`.
+- [ ] Acesso por SSO ao URL da app, confirmado pelo utilizador no browser (dentro e fora do portal do Fabric).
+- [ ] Consumo de capacidade (Fabric Capacity Metrics, se o utilizador tiver acesso).
 
 ---
 
