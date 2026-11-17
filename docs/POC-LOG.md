@@ -68,8 +68,15 @@ Nota: com `blankapp` as entidades vivem em `packages/data/src/` (não em `rayfin
 ### 2026-11-17 · Functions: pré-requisito local
 O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que exige Azure Functions Core Tools (`func`), não instalado. `ctx.sql` não corre em `rayfin dev`, por isso o teste da Fase 4 tem de ser feito com a app implantada de qualquer forma. **Pendente:** decidir com o utilizador se se instala `func` (software global → requer autorização, regra 13).
 
+### 2026-11-17 · Instalação do `func` e primeiro ensaio de deploy
+- Azure Functions Core Tools 4.16.1 instalado globalmente (`npm i -g azure-functions-core-tools@4`), com autorização do utilizador → **funciona**.
+- `npx rayfin login status` → sessão ativa (identidade de utilizador).
+- `npx rayfin up --workspace "fabric-app-reserva-lotes" --dry-run` → **falha**: `Workspace "fabric-app-reserva-lotes" not found`. A resolução do nome por API devolveu 200, mas o nome não consta da lista visível para a conta com sessão iniciada.
+- `npx rayfin connector search --all-workspaces --type fabric-sqlanalytics` → só mostra Lakehouses de outro workspace; `lh_reserva_lotes` não aparece.
+- Hipótese: a conta ou o tenant da sessão do CLI não é o do workspace da PoC, ou o workspace tem outro nome. Deploy **não** feito; aguardar o utilizador.
+
 ### Pendente para fechar a Fase 0
-- [ ] `npx rayfin login` (interativo, pelo utilizador).
+- [x] `npx rayfin login` (sessão ativa, mas ver acima).
 - [ ] Deploy *hello-world* para o workspace `fabric-app-reserva-lotes` (`npx rayfin up --workspace "fabric-app-reserva-lotes"`), com autorização explícita.
 - [ ] Acesso por SSO ao URL da app; região e consumo de capacidade.
 
