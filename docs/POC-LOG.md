@@ -106,7 +106,12 @@ O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que
 
 ### 2026-11-17 · Scripts M (`dataflow/*.pq`)
 - `url_dataset` (parâmetro), `ler_csv(arquivo, tipos)` e uma consulta por tabela; `fato_stock` acrescenta `data_hora_carga` (UTC).
-- **NÃO VERIFICADO:** `Web.Contents` + `RelativePath` dentro de Dataflow Gen2 (a testar no portal); o repositório tem de ser legível pelo dataflow (público ou credencial configurada).
+- **NÃO VERIFICADO:** `Web.Contents` + `RelativePath` dentro de Dataflow Gen2 (a testar no portal).
+
+### 2026-11-18 · Repositório e fonte dos CSVs
+- Repositório GitHub `AMRAndrade/FabricStockApp`, tornado **público** pelo utilizador (os dados são fictícios). Enquanto era privado, o URL raw devolvia 404 sem autenticação.
+- `url_dataset` = `https://raw.githubusercontent.com/AMRAndrade/FabricStockApp/main/dataset`.
+- Os 8 CSVs foram descarregados por HTTP anónimo: todos `200` e iguais byte a byte aos locais → **funciona**.
 
 ### 2026-11-17 · Testes de qualidade (`sql/qualidade_lakehouse.sql`)
 - 39 testes (contagens, chaves, integridade, sinal, referência).
