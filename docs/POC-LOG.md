@@ -116,3 +116,10 @@ O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que
 ### 2026-11-17 · Testes de qualidade (`sql/qualidade_lakehouse.sql`)
 - 39 testes (contagens, chaves, integridade, sinal, referência).
 - Ensaio prévio: a mesma lógica corrida em SQLite sobre os CSVs (traduções mínimas de dialeto) → 39 testes, 0 falhas. **Isto não substitui** a execução no endpoint SQL do Lakehouse (Fase 2).
+
+### 2026-11-18 · Dataflow criado/atualizado pela API REST do Fabric
+- Azure CLI 2.93.0 instalado (com autorização); `az login --allow-no-subscriptions` feito pelo utilizador. Token `https://api.fabric.microsoft.com` obtido pelo `az` → **funciona**.
+- `scripts/criar_dataflow.ts` monta `queryMetadata.json` + `mashup.pq` (formato `202502`) a partir de `dataflow/*.pq`.
+- **Incidente:** já existia um `df-reserva-lotes` no workspace (criado pelo utilizador no portal; existem também os itens de staging `StagingLakehouseForDataflows_*` / `StagingWarehouseForDataflows_*` de 2026-11-18 11:20). O script fez `updateDefinition` e **substituiu** a definição anterior sem a guardar primeiro. A API não guarda versões anteriores. Correção: o script passa a recusar substituir um Dataflow existente sem `--substituir`.
+- `getDefinition` depois da atualização: 10 consultas (`url_dataset` parâmetro, `ler_csv` função, 8 tabelas) e partes `queryMetadata.json`, `mashup.pq`, `.platform` → **funciona**.
+- Microsoft Learn (`data-factory/dataflow-gen2-public-apis`, "Current limitations"): os destinos de dados não podem ser definidos pela API (só no portal); "You can invoke Run APIs, but the actual run never succeeds". O refresh pela API fica **NÃO VERIFICADO**.
