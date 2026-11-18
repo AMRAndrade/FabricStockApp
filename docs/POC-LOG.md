@@ -309,4 +309,34 @@ Pré-requisito: dois utilizadores do tenant com permissão **Run and interact** 
 
 ### Pendentes da Fase 6
 - [ ] Teste manual no browser pelo utilizador (fluxo ponta a ponta e 2 utilizadores).
-- [ ] Alerta visível no ecrã 2 depois de correr `scripts/testes/alertas.ts` (Fase 5).
+- [ ] Alerta visível no ecrã 2: correr a simulação (`atualizar_dataflow.ts --fonte dataset_variacao` + `sincronizar.ts`) com uma reserva de 40 em `L-ALRT` e abrir o ecrã 2; repor com `--fonte dataset`.
+
+### 2026-11-18 · Execução de `scripts/testes/alertas.ts` (1.ª tentativa) — 3 ok, 4 falhas
+- `sync_01` → **ok**: 100 lotes, 0 inseridos, 0 atualizados, `qtd_reservada` intacta (reservado total 40).
+- Refresh com `url_dataset = …/main/dataset_variacao` → **falha** em 11 s: `ModelBuilderEvaluationChallengedErrorCode … Bad credentials … DataSources: {"Kind":"Web","Path":"…/main/dataset_variacao"} … Credentials are required to connect to the Web source`.
+  - Causa: o Dataflow associa a ligação/credencial Web ao **caminho exato** do URL (`…/main/dataset`). Trocar a pasta no `url_dataset` cria uma fonte nova sem credencial.
+  - Consequência: `alrt_01`, `alrt_02` e "libertar resolve alerta" falharam por falta da queda de stock (não por erro da deteção).
+- Reposição automática → **ok**: refresh com `dataset` concluído (85 s); `L-ALRT` sap 50, reservado 0.
+- Ligações existentes (API `GET /connections`): a ligação do Dataflow é `ShareableCloud`, tipo `Web`, credencial `Anonymous`, caminho `…/main/dataset`; no `queryMetadata.json` aparece como `{"ClusterId": <gatewayId>, "DatasourceId": <id da ligação>}`.
+- Correção proposta (em código, **não aplicada no Fabric**): `url_dataset` = raiz do repositório + novo parâmetro `pasta_dataset` (`dataflow/url_dataset.pq`, `dataflow/pasta_dataset.pq`, `ler_csv.pq`), para a fonte Web — e a credencial — ser sempre a mesma; `scripts/migrar_dataflow_pasta.ts` cria uma ligação Web anónima para a raiz (`skipTestConnection`, porque a raiz devolve 404) e reescreve a definição mantendo destinos e a ligação ao Lakehouse.
+  - 1.ª chamada `POST /connections` → 400 (`Web.Contents failed` no teste de ligação à raiz). A repetição com `skipTestConnection: true` **não foi executada**: criar uma ligação no tenant e reescrever o Dataflow exige autorização do utilizador (regra 13).
+
+### 2026-11-18 · Migração do Dataflow (autorizada pelo utilizador) e testes da Fase 5
+- `npx tsx scripts/migrar_dataflow_pasta.ts` → **funciona**: ligação `ShareableCloud` Web anónima criada para a raiz do repositório (`skipTestConnection: true`); definição do `df-reserva-lotes` reescrita com `url_dataset` = raiz, novo parâmetro `pasta_dataset` e `ler_csv` com `RelativePath = "/" & pasta_dataset & "/" & arquivo & ".csv"`; destinos e ligação ao Lakehouse mantidos.
+- Verificação a seguir: refresh com `pasta_dataset = "dataset"` → `Completed` em 64 s; `sql/qualidade_lakehouse.sql` → **39 testes, 0 falhas**.
+- 2.ª execução de `testes/alertas.ts`: todos os valores corretos, mas `alrt_01` falhou na comparação do `reserva_id`: a função devolvia o GUID em maiúsculas (`CONVERT` do SQL Server) e a API de dados devolve-o em minúsculas. Correção: `reservar` devolve `LOWER(...)` e a auditoria grava `entidade_id` em minúsculas (as linhas antigas ficam em maiúsculas). Funções reimplantadas; 1 ronda de `concorrencia.ts` a seguir → 14 testes, 0 falhas.
+
+### 2026-11-18 · Resultados (`npx tsx scripts/testes/alertas.ts`) — 7 testes, 0 falhas
+Evidência: `docs/evidencia/fase5_alertas.txt`.
+
+| teste | esperado | obtido |
+|---|---|---|
+| `sync_01` sincronizar sem alterações | `qtd_reservada` intacta | 100 lotes; 0 inseridos, 0 atualizados, 0 lotes alterados; reservado total 40 |
+| queda na origem (Dataflow com `dataset_variacao`) | refresh concluído | `Completed` em 48 s |
+| `alrt_01` `L-ALRT` 50 → 30 com 40 reservados | exatamente 1 alerta com artigo, lote, reserva e encomenda | 1 alerta: `ART-001`, `L-ALRT`, reserva certa, `ENC-0002`, 40 > 30 |
+| `alrt_02` repetir a sincronização | continua 1 | 0 alertas novos; 1 aberto |
+| libertar a reserva | alerta resolvido | libertada; alerta `resolvido` |
+| reposição | fonte `dataset`, `L-ALRT` sap 50, reservado 0 | refresh `Completed` em 85 s; sap 50, reservado 0 |
+
+- **Frescura (medida):** refresh do Dataflow 48–85 s + sincronização ~0,5–1 s. Uma queda de stock só é vista depois de (a) o refresh do Dataflow correr e (b) a sincronização correr. Com refresh e sincronização agendados de 15 em 15 minutos, um alerta pode chegar até ~30 min depois da alteração na origem. **NÃO VERIFICADO:** intervalo mínimo do agendamento do Dataflow e cadência de uma pipeline.
+- **Pronto quando:** `alrt_01`, `alrt_02`, `sync_01` passam → **cumprido**.

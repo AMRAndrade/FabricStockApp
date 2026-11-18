@@ -16,7 +16,7 @@ import { join } from "node:path";
 const API = "https://api.fabric.microsoft.com/v1";
 const NOME_DATAFLOW = "df-reserva-lotes";
 const PASTA_M = join(import.meta.dirname, "..", "dataflow");
-const CONSULTAS_AUXILIARES = ["url_dataset", "ler_csv"];
+const CONSULTAS_AUXILIARES = ["url_dataset", "pasta_dataset", "ler_csv"];
 const TABELAS = [
   "dim_armazem",
   "dim_artigo",

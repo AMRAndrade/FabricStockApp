@@ -1,12 +1,12 @@
 // Função ler_csv(arquivo, tipos)
 //   arquivo: nome do CSV sem extensão (ex.: "dim_lote")
 //   tipos:   lista {{"coluna", tipo}, ...} na ordem exata das colunas do CSV
-// Lê o CSV de url_dataset, confere as colunas, aplica Text.Trim, converte os
+// Lê url_dataset/pasta_dataset/<arquivo>.csv, confere as colunas, aplica Text.Trim, converte os
 // tipos com cultura en-US e faz FALHAR o refresh se alguma célula não converter.
 // Texto vazio mantém-se "" (nunca nulo); número vazio passa a nulo.
 (arquivo as text, tipos as list) as table =>
 let
-    conteudo = Web.Contents(url_dataset, [RelativePath = "/" & arquivo & ".csv"]),
+    conteudo = Web.Contents(url_dataset, [RelativePath = "/" & pasta_dataset & "/" & arquivo & ".csv"]),
     csv = Csv.Document(conteudo, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
     com_cabecalho = Table.PromoteHeaders(csv, [PromoteAllScalars = true]),
     esperadas = List.Transform(tipos, each _{0}),

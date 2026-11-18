@@ -1,5 +1,5 @@
-// Aponta o parâmetro url_dataset do df-reserva-lotes para uma pasta do GitHub
-// (dataset ou dataset_variacao) e corre o refresh. A definição é lida
+// Muda o parâmetro pasta_dataset do df-reserva-lotes (dataset ou
+// dataset_variacao; url_dataset é a raiz do repositório) e corre o refresh. A definição é lida
 // e reescrita a partir da atual, por isso os destinos e ligações configurados
 // no portal mantêm-se. Depois corre o refresh (job Refresh).
 //
@@ -9,7 +9,6 @@ import { correr_job, esperar_operacao, id_item, id_workspace, pedido, token_az }
 
 const WORKSPACE = 'fabric-app-reserva-lotes';
 const DATAFLOW = 'df-reserva-lotes';
-const BASE = 'https://raw.githubusercontent.com/AMRAndrade/FabricStockApp/main/';
 
 export type fonte_dataset = 'dataset' | 'dataset_variacao';
 
@@ -25,9 +24,9 @@ export async function atualizar_dataflow(fonte: fonte_dataset) {
   const mashup = partes.find((p) => p.path === 'mashup.pq');
   if (!mashup) throw new Error('Definição sem mashup.pq');
   const texto = Buffer.from(mashup.payload, 'base64').toString('utf8');
-  const padrao = /(shared url_dataset = ")[^"]*(")/;
-  if (!padrao.test(texto)) throw new Error('Parâmetro url_dataset não encontrado no mashup');
-  const novo = texto.replace(padrao, `$1${BASE}${fonte}$2`);
+  const padrao = /(shared pasta_dataset = ")[^"]*(")/;
+  if (!padrao.test(texto)) throw new Error('Parâmetro pasta_dataset não encontrado: correr migrar_dataflow_pasta.ts');
+  const novo = texto.replace(padrao, `$1${fonte}$2`);
   if (!/DataDestinations/.test(novo)) throw new Error('Definição sem destinos de dados: configure-os no portal antes');
   mashup.payload = Buffer.from(novo, 'utf8').toString('base64');
 
@@ -35,7 +34,7 @@ export async function atualizar_dataflow(fonte: fonte_dataset) {
   // O job 'Publish' devolve InvalidJobType neste Dataflow (CI/CD); o updateDefinition
   // já fica em vigor para o refresh seguinte (verificado pela variante L-ALRT na Fase 5).
   const refresh = await correr_job(token, ws, df, 'Refresh', DATAFLOW);
-  return { url_dataset: `${BASE}${fonte}`, refresh };
+  return { pasta_dataset: fonte, refresh };
 }
 
 if (import.meta.url === `file:///${process.argv[1]?.replace(/\\/g, '/')}`) {

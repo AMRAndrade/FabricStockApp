@@ -248,7 +248,7 @@ udf.func(
            INSERT dbo.app_reserva_detalhes (id, reserva_id, cod_armazem, cod_artigo, cod_lote, qtd)
              SELECT NEWID(), @id, cod_armazem, cod_artigo, cod_lote, qtd FROM @l;
            INSERT dbo.app_registo_auditorias (id, utilizador, acao, entidade, entidade_id, antes, depois, criado_em)
-             VALUES (NEWID(), @utilizador, 'reservar', 'app_reserva', CONVERT(nvarchar(60), @id), NULL,
+             VALUES (NEWID(), @utilizador, 'reservar', 'app_reserva', LOWER(CONVERT(nvarchar(60), @id)), NULL,
                      (SELECT @num_encomenda AS num_encomenda, @num_linha AS num_linha,
                              (SELECT cod_armazem, cod_artigo, cod_lote, qtd FROM @l FOR JSON PATH) AS linhas
                          FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
@@ -266,7 +266,7 @@ udf.func(
             WHERE s.chave IS NULL OR s.qtd_sap - s.qtd_reservada < l.qtd;
          END
 
-       SELECT @resultado AS resultado, CONVERT(nvarchar(36), @id) AS reserva_id, @detalhe AS detalhe;`,
+       SELECT @resultado AS resultado, LOWER(CONVERT(nvarchar(36), @id)) AS reserva_id, @detalhe AS detalhe;`,
       {
         cod_empresa: COD_EMPRESA_UNICA,
         num_encomenda: num_encomenda.trim(),
@@ -322,7 +322,7 @@ udf.func(
                     GROUP BY r.cod_empresa, d.cod_armazem, d.cod_artigo, d.cod_lote) AS d ON d.chave = s.chave;
            UPDATE dbo.app_alerta_stocks SET estado = 'resolvido' WHERE reserva_id = @id AND estado = 'aberto';
            INSERT dbo.app_registo_auditorias (id, utilizador, acao, entidade, entidade_id, antes, depois, criado_em)
-             VALUES (NEWID(), @utilizador, 'libertar', 'app_reserva', CONVERT(nvarchar(60), @id),
+             VALUES (NEWID(), @utilizador, 'libertar', 'app_reserva', LOWER(CONVERT(nvarchar(60), @id)),
                      '{"estado":"ativa"}', '{"estado":"libertada"}', SYSUTCDATETIME());
            COMMIT;
            SET @resultado = 'libertada';
