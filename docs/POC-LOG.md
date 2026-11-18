@@ -90,7 +90,7 @@ O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que
 - [x] `npx rayfin login`.
 - [x] Deploy *hello-world* para o workspace `fabric-app-reserva-lotes`.
 - [x] Acesso por SSO dentro do portal do Fabric: o utilizador confirmou que a app abre (ecrã de boas-vindas do template, sem conteúdo próprio). No workspace aparecem 3 itens: a Fabric App, a SQL database da app e o respetivo endpoint de análise SQL.
-- [ ] Acesso fora do portal (URL de alojamento direto) — por confirmar.
+- [x] Acesso fora do portal (URL de alojamento direto): confirmado pelo utilizador (app *hello-world*, antes do conector do Lakehouse).
 - [ ] Consumo de capacidade (Fabric Capacity Metrics, se o utilizador tiver acesso).
 
 ---
@@ -340,3 +340,9 @@ Evidência: `docs/evidencia/fase5_alertas.txt`.
 
 - **Frescura (medida):** refresh do Dataflow 48–85 s + sincronização ~0,5–1 s. Uma queda de stock só é vista depois de (a) o refresh do Dataflow correr e (b) a sincronização correr. Com refresh e sincronização agendados de 15 em 15 minutos, um alerta pode chegar até ~30 min depois da alteração na origem. **NÃO VERIFICADO:** intervalo mínimo do agendamento do Dataflow e cadência de uma pipeline.
 - **Pronto quando:** `alrt_01`, `alrt_02`, `sync_01` passam → **cumprido**.
+
+---
+
+## Fase 7 — Relatório
+
+- 2026-11-18: `docs/POC-RELATORIO.md` escrito. Recomendação: **GO condicionado** (Fase 4 passa 5/5). Pendente: teste manual da UI no browser com 2 utilizadores (guião na Fase 6).
