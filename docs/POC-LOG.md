@@ -200,3 +200,69 @@ Notas:
 
 ### 2026-11-18 · Pendentes
 - O commit de 2026-11-18 (`9271224`) e seguintes estão por enviar para o GitHub: o `git push` não interativo pede credenciais (o utilizador corre `git push`).
+
+---
+
+## Fase 4 — Concorrência
+
+### 2026-11-18 · Abordagens investigadas
+
+| # | abordagem | resultado | evidência |
+|---|---|---|---|
+| 1 | Mutação atómica condicional pela API gerada | **falha (documental e estrutural)** | `update` só filtra por `id`, sem incremento nem condição nem linhas afetadas (`data/mutations`); um "ler, calcular, gravar" pelo cliente violaria a regra 6. Na app as entidades `app_*` são só de leitura para clientes, por isso a API gerada nem permite escrever |
+| 2 | **Função Rayfin com transação T-SQL (`ctx.sql`, identidade da app)** | **funciona — abordagem vencedora** | 5/5 rondas; ver abaixo |
+| 3 | Procedimento armazenado | não testado (desnecessário) | criar um procedimento por `ctx.sql` seria alterar o esquema fora do `rayfin up db apply` (regra 14); a abordagem 2 já cobre o requisito |
+| 4 | `CHECK (qtd_reservada <= qtd_sap)` | **falha (documental)** | não há restrições multi-coluna nos decoradores; existem `CHECK (qtd_reservada >= 0)` e `CHECK (qtd_sap >= 0)` gerados por `min: 0`, que servem de rede contra libertações a mais |
+
+Pré-requisitos confirmados nesta fase: raw SQL ativo no tenant; `ctx.sql.query` aceita um lote T-SQL com `DECLARE`, variáveis de tabela, `OPENJSON`, `BEGIN TRAN`/`COMMIT`/`ROLLBACK`, `UPDATE … WITH (UPDLOCK, HOLDLOCK)` e devolve o último `SELECT`.
+
+### Código mínimo da abordagem vencedora (`packages/functions/src/function_app.ts`, função `reservar`)
+
+```sql
+SET NOCOUNT ON; SET XACT_ABORT ON;
+-- @l: lotes pedidos (OPENJSON do parâmetro @linhas, agregados por chave)
+BEGIN TRAN;
+  UPDATE s SET s.qtd_reservada = s.qtd_reservada + l.qtd, s.atualizado_em = SYSUTCDATETIME()
+    FROM dbo.app_saldo_lotes AS s WITH (UPDLOCK, HOLDLOCK)
+    JOIN @l AS l ON l.chave = s.chave
+   WHERE s.qtd_sap - s.qtd_reservada >= l.qtd;          -- verificação e escrita numa só operação
+  IF @@ROWCOUNT = @pedidos
+    BEGIN  -- inserir app_reservas, app_reserva_detalhes e app_registo_auditorias; COMMIT  END
+  ELSE
+    BEGIN  ROLLBACK;  -- tudo ou nada; depois lê o disponível para a mensagem de recusa  END
+SELECT @resultado, @id, @detalhe;
+```
+
+- `criado_por` e o autor da auditoria vêm de `ctx.user.id` (parâmetro SQL `@utilizador`); a função não tem parâmetro de identidade.
+- `libertar`: `UPDATE app_reservas … WITH (UPDLOCK, HOLDLOCK) WHERE id = @id AND estado = 'ativa'`; só se `@@ROWCOUNT = 1` desconta `qtd_reservada` e audita, na mesma transação.
+- Repetição automática (até 3 vezes) se o SQL Server escolher a transação como vítima de deadlock (erro 1205). Nos testes não houve nenhum deadlock.
+
+### Reposição do estado (`scripts/repor_estado.ts`)
+- Função `repor_lotes_teste` (servidor, auditada; só para a PoC): apaga alertas, detalhes e reservas que envolvem apenas os 5 lotes fixos e põe `qtd_reservada = 0`; depois `sincronizar_stock` repõe `qtd_sap` a partir do Lakehouse. A auditoria anterior não é apagada.
+
+### 2026-11-18 · Resultados (`npx tsx scripts/testes/concorrencia.ts 5`) — 30 testes, 0 falhas
+Evidência completa: `docs/evidencia/fase4_concorrencia_5_rondas.txt`.
+
+| teste | esperado | obtido (5 rondas) |
+|---|---|---|
+| `conc_01` 20 paralelas de 10 sobre `L-CONC` | 10 aceites, 10 recusadas | **5/5**: 10 aceites, 10 recusadas, 0 erros |
+| `conc_02` 50 paralelas de 10 | 10 aceites, 40 recusadas | **5/5**: 10 aceites, 40 recusadas, 0 erros |
+| `conc_03` estado final | `qtd_reservada` = 100, nunca acima | **10/10**: `qtd_reservada` = 100 = soma dos detalhes aceites; nunca acima de `qtd_sap` |
+| `atom_01` `[L-CONC 10, L-ATOM 10]`, `L-ATOM` a 5 | recusada, nada muda | recusada ("L-ATOM: pedido 10, disponível 5"); `L-CONC` 0→0; 0 reservas criadas |
+| `atom_02` `[L-CONC 10, L-ATOM 5]` | aceite | aceite; `L-CONC` 10, `L-ATOM` 5 |
+| `lib_01` libertar reserva | desce 10 | libertada; `L-CONC` 10→0, `L-ATOM` 5→0 |
+| `lib_02` 2 e 5 libertações paralelas da mesma reserva | só uma | 1 libertada + 1 recusada; 1 libertada + 4 recusadas; `qtd_reservada` desce uma vez |
+| `aud_01` | 1 linha por reserva e por libertação | 10/10 reservas com exatamente 1 linha `reservar`; 3/3 libertações com 1 linha `libertar`; autor = utilizador autenticado |
+| `aut_02` `criado_por`/`utilizador` forjados no corpo do pedido | ignorados | `criado_por` e autor da auditoria = utilizador autenticado (corpo original: `num_encomenda, num_linha, linhas`) |
+| `aut_03` update/delete numa linha **real** de auditoria | negado | negados; linha intacta |
+
+- **Latência** `reservar` (cliente → função → SQL → cliente, 350 chamadas, até 50 em paralelo): p50 384 ms, p95 712 ms, máx. 1 014 ms. Na ronda de ensaio, a frio: p50 660 ms, p95 3,5 s.
+- **Pronto quando:** 5/5 execuções passam → **cumprido**. Recomendação prevista no CLAUDE.md: **GO condicionado** (a confirmar no relatório com as Fases 5 e 6).
+
+### 2026-11-18 · Sincronização no servidor (preparação da Fase 5)
+- Tentativa 1: função com `AudienceType.Sql` + `mssql@12.6.0` (`tedious` 19.2.2) ao endpoint SQL do Lakehouse → **falha** no runtime das funções (`ESOCKET socket hang up`). O token é válido (`aud=https://database.windows.net`, identidade de utilizador = dono da app, `user_impersonation`); o mesmo driver e o mesmo tipo de token funcionam a partir do PC (100 linhas). Conclusão: o runtime das Fabric Functions não consegue abrir a ligação TDS ao endpoint SQL do Lakehouse (rede/redirecionamento; causa não apurada).
+- Correção do achado da Fase 2: o `socket hang up` do `tedious` 18.6.2 no PC é o bug do LOGIN7 documentado na Microsoft Learn/Rayfin (`tedious <= 19.1.2`); com 19.2.2 funciona no PC.
+- Tentativa 2 (**adotada**): ler a tabela Delta `fato_stock` diretamente do OneLake por HTTPS (`AudienceType.Storage`, identidade da app), reproduzindo os commits JSON de `_delta_log` e lendo os parquet com `hyparquet@1.30.0` (JS puro) → **funciona**: 100 linhas, 100 saldos inseridos em ~1,1 s; a repetição não altera nada (0 inseridos, 0 atualizados).
+- O Lakehouse foi criado **com esquemas**: as tabelas ficam em `Tables/dbo/<tabela>` (explica também o 400 da API "List Tables" na Fase 2).
+- Limitações da leitura Delta própria: sem deletion vectors nem logs já compactados (falha explícita nesses casos). Para produção seria preferível uma via suportada (por exemplo pipeline que escreve na BD da app).
+- O segredo `LH_SQL_SERVIDOR` (criado para a tentativa 1) foi apagado (`npx rayfin secret delete`).

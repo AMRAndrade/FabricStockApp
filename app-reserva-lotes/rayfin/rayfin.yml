@@ -44,3 +44,4 @@ connectors:
       type: delegated
     operations:
       - name: read
+secrets: []
