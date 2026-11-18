@@ -144,3 +144,59 @@ O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que
 - `powershell -File scripts/testes/qualidade_lakehouse.ps1 -workspace_id <id>` → **39 testes, 0 falhas**, 10,5 s (primeira execução, endpoint frio).
 - Grupos: contagens 9/9, chaves 13/13, integridade 8/8, sinal 3/3, referência 6/6 (5 lotes fixos + filtro laranja, `brix > 65`, `qtd_fisica > 0` = **12 lotes**).
 - Fase 1 e Fase 2: **prontas**.
+
+---
+
+## Fase 3 — Modelo da app, identidade e leitura do Lakehouse
+
+### 2026-11-18 · Packs, entidades e esquema
+- Packs do template aplicados em série: `data-modeling`, `connectors`, `functions` → **funciona**. O `Item` de exemplo foi removido.
+- 5 entidades em `packages/data/src/` (`app_saldo_lote`, `app_reserva`, `app_reserva_detalhe`, `app_alerta_stock`, `app_registo_auditoria`), todas `@role('authenticated', 'read')`: **os clientes só leem; todas as escritas passam por funções no servidor** (regras 6 e 7).
+- Sem chaves compostas no Rayfin (`known-limitations`): unicidade de (empresa, armazém, artigo, lote) por uma coluna `chave` com `unique: true`.
+- `npx rayfin up` (83 s) + `npx rayfin up db apply` (`{"version":2,"driftCheckRan":true}`) → **funciona**. Esquema aplicado só por código.
+- **Regra 2 (nomes):** o Rayfin pluraliza o nome da tabela com a biblioteca `pluralize` (`rayfin-lib` `EntityNameResolver.getPlural`): `app_saldo_lote` → tabela `app_saldo_lotes`, etc. Entidades GraphQL, classes e colunas mantêm o `snake_case` exato. Existe `EntityNameResolver.setCustomPlural`, mas não está documentado como suportado pelo CLI e um plural igual ao singular pode colidir nos nomes GraphQL. **Proposta:** aceitar o plural (continua `snake_case`, com prefixo `app_`).
+- Restrições criadas na BD (consultadas por `ctx.sql` em `sys.*`):
+  - PK em todas as tabelas; FK `reserva_id` em `app_reserva_detalhes` e `app_alerta_stocks` (de `@one`);
+  - `CHECK` gerados a partir de `min` (`qtd_sap >= 0`, `qtd_reservada >= 0`, `qtd >= 0`, `num_linha >= 1`) e de `@set` (`estado IN (...)`, collation BIN2);
+  - **não** aparece restrição `UNIQUE` para `chave` em `sys.key_constraints` (pode ser índice único; **NÃO VERIFICADO**, rever na Fase 4/5 antes de depender dela);
+  - não há forma documentada de declarar `CHECK (qtd_reservada <= qtd_sap)` (multi-coluna).
+
+### 2026-11-18 · Conector do Lakehouse
+- `npx rayfin connector add --type fabric-sqlanalytics --workspace-id <id> --item-id <id> --name lh_reserva_lotes --operations read --auth delegated -y` → **funciona**; schema discovery: 8 tabelas; o `itemId` gravado é o do endpoint SQL, não o do Lakehouse.
+- **Identidade:** `delegated` — cada leitura corre como o utilizador autenticado (precisa de acesso ao `lh_reserva_lotes`). O omissão do CLI seria `application` (dono da app).
+- Metadados do Lakehouse: sem PK nem FK e todas as colunas anuláveis (esperado pela documentação) → 8 entidades só de leitura, sem chave. Nomes em `snake_case` iguais às tabelas, em vez do PascalCase do contrato de geração (regra 2).
+- IDs do tenant retirados do `rayfin.yml` com interpolação `${LH_RESERVA_LOTES_WORKSPACE_ID}` / `${LH_RESERVA_LOTES_ITEM_ID}` definidos em `rayfin/.env` (fora do git). O `rayfin up` resolve-os → **funciona**.
+- `npx rayfin connector inspect --name lh_reserva_lotes [--entity dim_armazem]` → **falha** com `Fabric API error: 400 Bad Request` (causa não apurada; possivelmente a interpolação `${…}` no `inspect`). A leitura pela app/SDK funciona (ver `filtro_01`).
+
+### 2026-11-18 · Identidade (mecanismo e limitações)
+- Testes chamam a API diretamente com o SDK 2.0.0 (`scripts/lib/cliente.ts`): token Entra delegado → `signInWithEntraToken` → sessão Rayfin.
+- O Azure CLI **não** obtém `Item.Execute.All` (`declined scopes`); o token vem do módulo de autenticação do CLI do Rayfin (mesmo caminho do `rayfin connector invoke`, escopo `https://analysis.windows.net/powerbi/api/.default`). Dependência de um módulo interno do CLI: aceitável para a PoC, a rever.
+- No servidor, `ctx.user.id` (= `claims.sub`) **é igual** ao `session.user.id` do cliente → **funciona**. É o único campo de identidade do `RayfinUser`; não há email nem nome (para mostrar nomes será preciso outra fonte).
+- `ctx.sql` (raw SQL) **está ativo** neste tenant e corre como `SUSER_SNAME()` = **conta do dono da app** (quem fez o deploy), não uma identidade de serviço. Implicação: se o dono sair da organização ou perder acesso, as funções deixam de escrever (risco para o relatório).
+
+### 2026-11-18 · Sonda para a Fase 4 (função `diagnostico`)
+- `ctx.sql.execute` com um lote T-SQL de várias instruções (`SET XACT_ABORT ON; BEGIN TRAN; … WITH (UPDLOCK, HOLDLOCK) …; COMMIT;`) numa só chamada → **funciona** (`rowsAffected=-1`). Era NÃO VERIFICADO. A abordagem 2 da Fase 4 é viável à partida.
+- Latência de uma invocação com 4–6 consultas SQL: ~3,8–4,9 s (primeira chamada, inclui troca de token).
+
+### 2026-11-18 · Testes da Fase 3 (`npx tsx scripts/testes/fase3.ts`) — 13 testes, 0 falhas
+
+| teste | esperado | obtido |
+|---|---|---|
+| `aut_01` SDK sem sessão (create em dados; invocar função) | negado | negado no cliente (`AuthError NO_REFRESH_TOKEN`) |
+| `aut_01` HTTP cru sem token ao GraphQL | 401/403 | **HTTP 401** |
+| `aut_01` HTTP cru sem token a `functions/diagnostico/invoke` | 401/403 | **HTTP 401** |
+| `aut_03` create / update / delete em `app_registo_auditoria` com sessão válida | negado | negado (GraphQL `InternalServerError`, HTTP 200) |
+| `aut_03` read | permitido | permitido |
+| escrita direta em `app_saldo_lote` (create, update) e `app_reserva` (create) com sessão | negado | negado (idem) |
+| nenhuma linha das tentativas gravada (consulta posterior) | 0 | 0 / 0 / 0 |
+| `filtro_01` laranja, `brix > 65`, stock > 0 | 12 lotes | **12 lotes**, 3,2 s (1.ª) / ~0,5 s (seguintes); inclui `L-CONC`, `L-ATOM`, `L-ALRT`; exclui `L-FORA`, `L-LIM` |
+
+Notas:
+- As recusas de escrita com sessão devolvem um erro genérico (`Internal server error`), não um 403 explícito: **pouco claro** para diagnóstico e para a mensagem ao utilizador. A prova da recusa é a configuração DAB aplicada (`authenticated: ["read"]` em todas as entidades `app_*`, em `rayfin/.temp/dab-config.json`) mais a consulta que confirma 0 linhas gravadas.
+- A introspeção GraphQL devolve o esquema vazio (nem as consultas `app_*`): não serve como prova.
+- `filtro_01` ainda usa `qtd_fisica` do Lakehouse; quando existir `app_saldo_lote` sincronizado (Fase 4/5) o filtro passa a `qtd_sap − qtd_reservada > 0`.
+- **`aut_02`** (criado_por forjado no corpo) depende da função `reservar`: passa para a Fase 4. Por construção, `criado_por` não é parâmetro da função e vem de `ctx.user.id`.
+- `aut_03` foi testado com um id inexistente (a tabela está vazia). **Repetir na Fase 4** sobre uma linha real de auditoria.
+
+### 2026-11-18 · Pendentes
+- O commit de 2026-11-18 (`9271224`) e seguintes estão por enviar para o GitHub: o `git push` não interativo pede credenciais (o utilizador corre `git push`).

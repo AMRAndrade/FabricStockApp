@@ -2,5 +2,20 @@
   "name": "scripts-reserva-lotes",
   "private": true,
   "type": "module",
-  "description": "Scripts da PoC (testes SQL, concorrência, reposição de estado). Correm com node >= 23 (type stripping)."
+  "description": "Scripts da PoC (testes SQL, concorrência, reposição de estado). TypeScript estrito (tsconfig.json); correm com `npx tsx`.",
+  "dependencies": {
+    "@microsoft/rayfin-auth": "2.0.0",
+    "@microsoft/rayfin-auth-provider-fabric": "2.0.0",
+    "@microsoft/rayfin-client": "2.0.0",
+    "@microsoft/rayfin-connector-fabric-graphql": "2.0.0",
+    "@microsoft/rayfin-connectors": "2.0.0",
+    "@microsoft/rayfin-core": "2.0.0",
+    "@microsoft/rayfin-data": "2.0.0",
+    "@microsoft/rayfin-functions": "2.0.0",
+    "@microsoft/rayfin-lib": "2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "tsx": "4.19.2"
+  }
 }

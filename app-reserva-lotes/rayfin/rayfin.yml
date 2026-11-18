@@ -29,4 +29,18 @@ services:
   storage:
     enabled: false
   functions:
-    enabled: false
+    enabled: true
+    path: packages/functions
+    buildCommand: npm run build
+    auth:
+      type: application
+connectors:
+  - name: lh_reserva_lotes
+    type: fabric-sqlanalytics
+    config:
+      workspaceId: ${LH_RESERVA_LOTES_WORKSPACE_ID}
+      itemId: ${LH_RESERVA_LOTES_ITEM_ID}
+    auth:
+      type: delegated
+    operations:
+      - name: read

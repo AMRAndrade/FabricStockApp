@@ -1,23 +1,15 @@
-//-----------------------------------------------------------------------
-// <copyright company="Microsoft Corporation">
-//        Copyright (c) Microsoft Corporation.  All rights reserved.
-//        Licensed under the MIT license. See LICENSE file in the project root for full license information.
-// </copyright>
-//-----------------------------------------------------------------------
+import { app_saldo_lote } from './app_saldo_lote.js';
+import { app_reserva } from './app_reserva.js';
+import { app_reserva_detalhe } from './app_reserva_detalhe.js';
+import { app_alerta_stock } from './app_alerta_stock.js';
+import { app_registo_auditoria } from './app_registo_auditoria.js';
+import type { UniversalAppSchema } from '@rayfin-app/shared';
 
 /**
- * The app's Rayfin data schema registration.
- *
- * Empty on purpose. A dashboard over a Power BI semantic model stores nothing,
- * so the data service ships disabled in `rayfin/rayfin.yml` and both of these
- * stay as they are.
- *
- * When the app needs to own records — a tracker, a request list, an admin screen
- * — read the `data-modeling` skill, set `services.data.enabled: true`, declare
- * each entity as a decorated class, export it from this package, add it to
- * `UniversalAppSchema`, and register it in `schema`. Every entity needs explicit
- * access control; anonymous access is refused at validation time.
+ * Esquema da BD própria da app (tabelas app_*). Manter alinhado com
+ * `UniversalAppSchema` em `@rayfin-app/shared`.
  */
-export type { UniversalAppSchema } from '@rayfin-app/shared';
+export type { UniversalAppSchema };
+export { app_saldo_lote, app_reserva, app_reserva_detalhe, app_alerta_stock, app_registo_auditoria };
 
-export const schema = [];
+export const schema = [app_saldo_lote, app_reserva, app_reserva_detalhe, app_alerta_stock, app_registo_auditoria];

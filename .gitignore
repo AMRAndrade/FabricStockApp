@@ -20,3 +20,8 @@ __pycache__/
 .vscode/
 .idea/
 .DS_Store
+
+# Gerados no deploy/descoberta; metadata.json inclui o anfitrião do endpoint SQL (derivado do workspace)
+app-reserva-lotes/packages/functions/deploymetadata.json
+app-reserva-lotes/packages/functions/runtimemetadata.json
+app-reserva-lotes/rayfin/connectors/*/metadata.json
