@@ -123,3 +123,24 @@ O pack `functions` usa `npm run dev` (`rayfin dev`) para gerar `types.ts`, o que
 - **Incidente:** já existia um `df-reserva-lotes` no workspace (criado pelo utilizador no portal; existem também os itens de staging `StagingLakehouseForDataflows_*` / `StagingWarehouseForDataflows_*` de 2026-11-18 11:20). O script fez `updateDefinition` e **substituiu** a definição anterior sem a guardar primeiro. A API não guarda versões anteriores. Correção: o script passa a recusar substituir um Dataflow existente sem `--substituir`.
 - `getDefinition` depois da atualização: 10 consultas (`url_dataset` parâmetro, `ler_csv` função, 8 tabelas) e partes `queryMetadata.json`, `mashup.pq`, `.platform` → **funciona**.
 - Microsoft Learn (`data-factory/dataflow-gen2-public-apis`, "Current limitations"): os destinos de dados não podem ser definidos pela API (só no portal); "You can invoke Run APIs, but the actual run never succeeds". O refresh pela API fica **NÃO VERIFICADO**.
+
+### 2026-11-18 · Destinos, refresh e carga no Lakehouse
+- O utilizador configurou no portal os 8 destinos (Lakehouse `lh_reserva_lotes`, nova tabela) e publicou. `getDefinition` confirma 8 `DataDestinations` (`Settings = [Kind = "Automatic"]`, que substitui a tabela) e as ligações `Web` (anónima, GitHub) e `Lakehouse`.
+- Publicar **não** executa o refresh: o histórico de jobs só tinha `Publish` e as tabelas não existiam.
+- Refresh pela API (`POST …/jobs/instances?jobType=Refresh`, com `executionData` com UPN e object ID do utilizador) → `202`, `Completed` em ~56 s → **funciona**. Contradiz a limitação da Microsoft Learn ("the actual run never succeeds"), pelo menos com identidade de utilizador e em 2026-11-18.
+- `Web.Contents(url_dataset, [RelativePath = …])` num Dataflow Gen2 → **funciona** (era NÃO VERIFICADO).
+- Tipos no endpoint SQL: texto `varchar`, datas `date`, quantidades e `valor_numero` `float`, `num_linha` `bigint`, `data_hora_carga` `datetime2` → conforme o dicionário.
+
+### 2026-11-18 · Acesso ao endpoint SQL a partir de scripts
+- Driver Node.js `tedious` 18.6.2 com token Entra (`azure-active-directory-access-token`): TCP 1433 abre, o PRELOGIN passa, e o servidor fecha a ligação logo após o LOGIN7 (`socket hang up`). Testado com `encrypt: true` e `strict` (TDS 8) e com tokens para `database.windows.net`, `database.windows.net/` e `analysis.windows.net/powerbi/api` → **falha** (causa não apurada).
+- `System.Data.SqlClient` (.NET Framework, Windows PowerShell 5.1) com `AccessToken` do Azure CLI → **funciona**. Os testes de qualidade passam a correr por `scripts/testes/qualidade_lakehouse.ps1`.
+- Implicação a seguir na Fase 4: os scripts de teste devem passar pela API da app (Rayfin) e não por SQL direto a partir de Node.
+
+---
+
+## Fase 2 — Qualidade dos dados
+
+### 2026-11-18 · Execução no endpoint SQL do `lh_reserva_lotes`
+- `powershell -File scripts/testes/qualidade_lakehouse.ps1 -workspace_id <id>` → **39 testes, 0 falhas**, 10,5 s (primeira execução, endpoint frio).
+- Grupos: contagens 9/9, chaves 13/13, integridade 8/8, sinal 3/3, referência 6/6 (5 lotes fixos + filtro laranja, `brix > 65`, `qtd_fisica > 0` = **12 lotes**).
+- Fase 1 e Fase 2: **prontas**.
