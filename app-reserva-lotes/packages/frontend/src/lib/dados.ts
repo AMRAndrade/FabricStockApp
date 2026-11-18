@@ -199,20 +199,28 @@ export function mensagem_erro(erro: unknown): string {
 }
 
 /** Estado de uma leitura assíncrona: a carregar, erro ou dados; `recarregar` repete. */
-export function use_leitura<T>(ler: () => Promise<T>, dependencias: unknown[]) {
-  const [estado, set_estado] = useState<{ a_carregar: boolean; erro: string | null; dados: T | null }>({
-    a_carregar: true, erro: null, dados: null,
-  });
+export function useLeitura<T>(ler: () => Promise<T>, dependencias: unknown[]) {
   const [versao, set_versao] = useState(0);
+  // A leitura em curso é identificada pelas dependências + versão; enquanto o
+  // resultado guardado for de outra chave, o estado é "a carregar".
+  const chave = JSON.stringify([...dependencias, versao]);
+  const [estado, set_estado] = useState<{ chave: string | null; erro: string | null; dados: T | null }>({
+    chave: null, erro: null, dados: null,
+  });
   const recarregar = useCallback(() => set_versao((v) => v + 1), []);
   useEffect(() => {
     let cancelado = false;
-    set_estado((e) => ({ ...e, a_carregar: true, erro: null }));
     ler()
-      .then((dados) => { if (!cancelado) set_estado({ a_carregar: false, erro: null, dados }); })
-      .catch((erro: unknown) => { if (!cancelado) set_estado({ a_carregar: false, erro: mensagem_erro(erro), dados: null }); });
+      .then((dados) => { if (!cancelado) set_estado({ chave, erro: null, dados }); })
+      .catch((erro: unknown) => { if (!cancelado) set_estado({ chave, erro: mensagem_erro(erro), dados: null }); });
     return () => { cancelado = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...dependencias, versao]);
-  return { ...estado, recarregar };
+  }, [chave]);
+  const a_carregar = estado.chave !== chave;
+  return {
+    a_carregar,
+    erro: a_carregar ? null : estado.erro,
+    dados: a_carregar ? null : estado.dados,
+    recarregar,
+  };
 }

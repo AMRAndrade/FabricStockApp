@@ -266,3 +266,47 @@ Evidência completa: `docs/evidencia/fase4_concorrencia_5_rondas.txt`.
 - O Lakehouse foi criado **com esquemas**: as tabelas ficam em `Tables/dbo/<tabela>` (explica também o 400 da API "List Tables" na Fase 2).
 - Limitações da leitura Delta própria: sem deletion vectors nem logs já compactados (falha explícita nesses casos). Para produção seria preferível uma via suportada (por exemplo pipeline que escreve na BD da app).
 - O segredo `LH_SQL_SERVIDOR` (criado para a tentativa 1) foi apagado (`npx rayfin secret delete`).
+
+---
+
+## Fase 5 — Sincronização e alertas (preparado; execução pendente do push)
+
+- `sincronizar_stock` (função, servidor): lê `fato_stock` do OneLake/Delta e faz `MERGE` em `app_saldo_lotes` (`qtd_sap`; `qtd_reservada` nunca é tocada), seguido da criação de alertas `(reserva ativa, lote)` com `qtd_reservada > qtd_sap`, sem duplicar (`NOT EXISTS` + índice único `UQ_app_alerta_stocks_chave` em `reserva_id|cod_lote`). Tudo numa transação, com auditoria.
+- `libertar` passa a `resolvido` os alertas abertos dessa reserva.
+- Idempotência já observada na Fase 4: sincronizar duas vezes sem alterações → 0 inseridos, 0 atualizados.
+- `scripts/simular_queda_stock.ts` → `dataset_variacao/` (8 CSVs; `L-ALRT` 50 → 30).
+- `scripts/atualizar_dataflow.ts --fonte dataset|dataset_variacao`: muda o parâmetro `url_dataset` na definição atual do Dataflow (`getDefinition` → `updateDefinition`, preservando destinos e ligações) e corre o refresh pela API.
+  - O job `Publish` devolve `InvalidJobType` neste Dataflow (CI/CD), apesar de estar na Microsoft Learn; o `updateDefinition` basta.
+  - **Frescura medida:** refresh completo do Dataflow (8 tabelas) = 56–64 s; sincronização = ~0,5–1,1 s. **NÃO VERIFICADO:** intervalo mínimo do agendamento do Dataflow e cadência de uma pipeline (a testar no portal).
+- `scripts/testes/alertas.ts` (`sync_01`, `alrt_01`, `alrt_02`, alerta resolvido ao libertar; repõe a fonte e o estado no fim) — **por correr: precisa de `dataset_variacao/` no GitHub (push pelo utilizador).**
+- Agendamento da sincronização de 15 a 30 minutos (documentar, não construir): a função `sincronizar_stock` pode ser chamada por um processo agendado com identidade de utilizador (por exemplo uma pipeline/notebook do Fabric a seguir ao refresh do Dataflow, ou um job agendado que use `signInWithEntraToken`). **NÃO VERIFICADO:** se o Fabric Apps tem gatilho temporizado próprio para funções (não encontrado na documentação do Rayfin 2.0.0).
+
+---
+
+## Fase 6 — UI mínima
+
+### 2026-11-18 · Implementação
+- Template mantido: `AuthProvider` + `AuthGate` + `rayfin-auth.service` (sem outro fluxo de login); página de boas-vindas retirada conforme o README do template (`sourceActivity` desligado; `Welcome*`, `EmptyStatePreview`, `FabricAppMark` removidos; specs adaptados mantendo a cobertura do `AuthGate`).
+- Estilos do template (tokens Tailwind de `global.css`), sem personalização (regra 15).
+- **Ecrã 1 — Stock e reserva** (`src/ecras/ecra_stock.tsx`): linha de encomenda → lotes do artigo da linha (atributos do Lakehouse + saldo da BD da app) → filtro por atributo numérico (por omissão `brix > 65`) e "só com disponível > 0" → quantidades por lote → reservar. Validação no cliente (> 0, ≤ disponível, 3 casas, lote bloqueado desativado) e no servidor (`reservar`). Recusa do servidor mostrada com o motivo ("Stock insuficiente: L-…: pedido X, disponível Y").
+- **Ecrã 2 — Reservas e alertas** (`src/ecras/ecra_reservas.tsx`): alertas abertos; reservado por artigo e lote; reservas ativas com botão Libertar.
+- Estados de carregamento, vazio e erro em todas as leituras; sem dados embutidos.
+- **Regra 2 vs React:** componentes React em PascalCase (`EcraStock`, `EcraReservas`) e hook `useLeitura`, exigidos pelo JSX (minúsculas = elemento HTML) e pela regra de lint `react-hooks/rules-of-hooks`. Ficheiros, variáveis e restantes funções em `snake_case`. **Proposta:** aceitar esta exceção para identificadores React.
+- Nota de modelo: o filtro do ecrã é por artigo da linha de encomenda (ex.: `ART-001` tem 12 lotes); o cenário "12 lotes de laranja com Brix > 65" abrange os 3 artigos de laranja (validado em `filtro_01`).
+- Validação: typecheck, lint, 56 testes (vitest), build, `npx rayfin up` (71 s, todos os componentes `success`).
+- `npx tsx scripts/testes/ui_leituras.ts`: as 10 consultas dos ecrãs + reservar/libertar contra o backend implantado → **11/11 ok**.
+
+### Guião de teste manual (2 utilizadores)
+Pré-requisito: dois utilizadores do tenant com permissão **Run and interact** no item `app-reserva-lotes` e acesso de leitura ao `lh_reserva_lotes` (o conector é `delegated`). Estado reposto com `npx tsx scripts/repor_estado.ts`.
+
+1. Utilizador A e B abrem a app (portal do Fabric → workspace → `app-reserva-lotes`) e entram com SSO.
+2. Ambos escolhem `ENC-0001 · linha 1` e filtram Brix > 65: `L-CONC` mostra SAP 100, reservado 0, disponível 100.
+3. A escreve 60 em `L-CONC`; B escreve 60 em `L-CONC` (o cliente aceita: 60 ≤ 100).
+4. Ambos carregam em **Reservar** quase ao mesmo tempo.
+5. Esperado: um recebe "Reserva criada"; o outro recebe "Reserva recusada. Stock insuficiente: L-CONC: pedido 60.000, disponível 40.000". Depois de **Atualizar**, `L-CONC` mostra reservado 60, disponível 40.
+6. No ecrã 2, a reserva aparece em "Reservas ativas" e em "Reservado por artigo e lote"; **Libertar** volta a pôr o disponível em 100. Um segundo clique (ou o outro utilizador a libertar a mesma reserva) recebe "Não libertada: A reserva já foi libertada".
+7. Registar aqui: resultado, se a app abre dentro do portal, se abre no URL de alojamento direto e se a leitura do Lakehouse funciona fora do portal.
+
+### Pendentes da Fase 6
+- [ ] Teste manual no browser pelo utilizador (fluxo ponta a ponta e 2 utilizadores).
+- [ ] Alerta visível no ecrã 2 depois de correr `scripts/testes/alertas.ts` (Fase 5).
